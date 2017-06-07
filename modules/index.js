@@ -1,6 +1,5 @@
-import React from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import createClass from 'create-react-class';
 
 function translateStyle(x, measure, y) {
   var _y = y || "0";
@@ -10,38 +9,19 @@ function translateStyle(x, measure, y) {
   };
 }
 
-var Swipeable = createClass({ displayName: "Swipeable",
-  propTypes: {
-    onSwiped: PropTypes.func,
-    onSwipingUp: PropTypes.func,
-    onSwipingRight: PropTypes.func,
-    onSwipingDown: PropTypes.func,
-    onSwipingLeft: PropTypes.func,
-    onSwipedUp: PropTypes.func,
-    onSwipedRight: PropTypes.func,
-    onSwipedDown: PropTypes.func,
-    onSwipedLeft: PropTypes.func,
-    flickThreshold: PropTypes.number,
-    delta: PropTypes.number
-  },
+class Swipeable extends Component {
+  constructor(props) {
+    super(props);
+  }
 
-  getInitialState: function getInitialState() {
-    return {
-      x: null,
-      y: null,
-      swiping: false,
-      start: 0
-    };
-  },
+  state = {
+    x: null,
+    y: null,
+    swiping: false,
+    start: 0
+  }
 
-  getDefaultProps: function getDefaultProps() {
-    return {
-      flickThreshold: 0.6,
-      delta: 10
-    };
-  },
-
-  calculatePos: function calculatePos(e) {
+  calculatePos = (e) => {
     var x = e.changedTouches[0].clientX;
     var y = e.changedTouches[0].clientY;
 
@@ -57,9 +37,9 @@ var Swipeable = createClass({ displayName: "Swipeable",
       absX: axd,
       absY: ayd
     };
-  },
+  }
 
-  touchStart: function touchStart(e) {
+  touchStart = (e) => {
     if (e.touches.length > 1) {
       return;
     }
@@ -69,9 +49,9 @@ var Swipeable = createClass({ displayName: "Swipeable",
       y: e.touches[0].clientY,
       swiping: false
     });
-  },
+  }
 
-  touchMove: function touchMove(e) {
+  touchMove = (e) => {
     if (!this.state.x || !this.state.y || e.touches.length > 1) {
       return;
     }
@@ -114,9 +94,9 @@ var Swipeable = createClass({ displayName: "Swipeable",
     if (cancelPageSwipe) {
       e.preventDefault();
     }
-  },
+  }
 
-  touchEnd: function touchEnd(ev) {
+  touchEnd = (ev) => {
     if (this.state.swiping) {
       var pos = this.calculatePos(ev);
 
@@ -142,9 +122,9 @@ var Swipeable = createClass({ displayName: "Swipeable",
     }
 
     this.setState(this.getInitialState());
-  },
+  }
 
-  render: function render() {
+  render() {
       var props = Object.assign({}, this.props, { onTouchStart: this.touchStart,
           onTouchMove: this.touchMove,
           onTouchEnd: this.touchEnd });
@@ -155,70 +135,53 @@ var Swipeable = createClass({ displayName: "Swipeable",
       }
     return React.createElement("div", props, this.props.children);
   }
-});
+};
 
-var SwipeToRevealOptions = createClass({
-  displayName: "SwipeToRevealOptions",
+Swipeable.propTypes = {
+  onSwiped: PropTypes.func,
+  onSwipingUp: PropTypes.func,
+  onSwipingRight: PropTypes.func,
+  onSwipingDown: PropTypes.func,
+  onSwipingLeft: PropTypes.func,
+  onSwipedUp: PropTypes.func,
+  onSwipedRight: PropTypes.func,
+  onSwipedDown: PropTypes.func,
+  onSwipedLeft: PropTypes.func,
+  flickThreshold: PropTypes.number,
+  delta: PropTypes.number
+}
 
-  propTypes: {
-    rightOptions: PropTypes.array,
-    leftOptions: PropTypes.array,
-    className: PropTypes.string,
-    actionThreshold: PropTypes.number,
-    visibilityThreshold: PropTypes.number,
-    transitionBackTimeout: PropTypes.number,
-    callActionWhenSwipingFarLeft: PropTypes.bool,
-    callActionWhenSwipingFarRight: PropTypes.bool,
-    transitionBackOnRightClick: PropTypes.bool,
-    transitionBackOnLeftClick: PropTypes.bool,
-    closeOthers: PropTypes.func,
-    onRightClick: PropTypes.func,
-    onLeftClick: PropTypes.func,
-    onReveal: PropTypes.func,
-    maxItemWidth: PropTypes.number,
-    parentWidth: PropTypes.number
-  },
+Swipeable.defaultProps = {
+  flickThreshold: 0.6,
+  delta: 10
+}
 
-  getInitialState: function getInitialState() {
-    return {
-      delta: 0,
-      showRightButtons: false,
-      showLeftButtons: false,
-      swipingLeft: false,
-      swipingRight: false,
-      transitionBack: false,
-      action: null,
-      callActionWhenSwipingFarRight: false,
-      callActionWhenSwipingFarLeft: false,
-      transitionBackOnRightClick: true,
-      transitionBackOnLeftClick: true
-    };
-  },
+class SwipeToRevealOptions extends Component {
+  constructor(props) {
+    super(props);
+  }
 
-  getDefaultProps: function getDefaultProps() {
-    return {
-      rightOptions: [],
-      leftOptions: [],
-      className: "",
-      actionThreshold: 300,
-      visibilityThreshold: 50,
-      transitionBackTimeout: 400,
-      onRightClick: function onRightClick() {},
-      onLeftClick: function onLeftClick() {},
-      onReveal: function onReveal() {},
-      closeOthers: function closeOthers() {},
-      maxItemWidth: 120,
-      parentWidth: (typeof window !== 'undefined' && window.outerWidth) || (typeof screen !== 'undefined' && screen.width) || 320
-    };
-  },
+  state = {
+    delta: 0,
+    showRightButtons: false,
+    showLeftButtons: false,
+    swipingLeft: false,
+    swipingRight: false,
+    transitionBack: false,
+    action: null,
+    callActionWhenSwipingFarRight: false,
+    callActionWhenSwipingFarLeft: false,
+    transitionBackOnRightClick: true,
+    transitionBackOnLeftClick: true
+  }
 
-  componentWillUnmount: function componentWillUnmount() {
+  componentWillUnmount() {
     if (this._timeout) {
       clearTimeout(this._timeout);
     }
-  },
+  }
 
-  render: function render() {
+  render() {
     var classes = this.props.className + " stro-container";
     if (this.state.transitionBack) {
       classes += " transition-back";
@@ -259,9 +222,9 @@ var SwipeToRevealOptions = createClass({
             onClick: this.rightClick.bind(this, option),
             style: this.getStyle("right", index) }, React.createElement("span", propsLabel, typeof option.label !== 'string' && option.label || void 0));
         }).bind(this))));
-  },
+  }
 
-  swipingLeft: function swipingLeft(event, delta) {
+  swipingLeft = (event, delta) => {
     if (this.swipingHandleStylesAndDelta(delta, "left")) {
       return;
     }
@@ -279,9 +242,9 @@ var SwipeToRevealOptions = createClass({
       action: action,
       swipingLeft: true
     });
-  },
+  }
 
-  swipingRight: function swipingRight(event, delta) {
+  swipingRight = (event, delta) => {
     if (this.swipingHandleStylesAndDelta(delta, "right")) {
       return;
     }
@@ -299,9 +262,9 @@ var SwipeToRevealOptions = createClass({
       action: action,
       swipingRight: true
     });
-  },
+  }
 
-  swipingHandleStylesAndDelta: function swipingHandleStylesAndDelta(delta, direction) {
+  swipingHandleStylesAndDelta = (delta, direction) => {
     if (this.shouldAbort(direction)) {
       return true;
     }
@@ -310,9 +273,9 @@ var SwipeToRevealOptions = createClass({
     this.shouldCloseOthers(direction);
 
     return false;
-  },
+  }
 
-  shouldAbort: function shouldAbort(direction) {
+  shouldAbort = (direction) => {
     if (this.state.transitionBack) {
       return true;
     }
@@ -321,23 +284,23 @@ var SwipeToRevealOptions = createClass({
     } else {
       return !this.props.rightOptions.length && !this.state.showLeftButtons || this.state.showRightButtons && !this.props.callActionWhenSwipingFarLeft;
     }
-  },
+  }
 
-  shouldTransitionBack: function shouldTransitionBack(direction) {
+  shouldTransitionBack = (direction) => {
     if (direction === "right" && this.state.showRightButtons || this.state.showLeftButtons) {
       this.transitionBack();
     }
-  },
+  }
 
-  shouldCloseOthers: function shouldCloseOthers(direction) {
+  shouldCloseOthers = (direction) => {
     if (this.props.closeOthers) {
       if (direction === "right" && !this.state.swipingRight || !this.state.swipingLeft) {
         this.props.closeOthers();
       }
     }
-  },
+  }
 
-  swiped: function swiped() {
+  swiped = () => {
     switch (this.state.action) {
       case "rightVisible":
         this.revealRight();
@@ -366,33 +329,33 @@ var SwipeToRevealOptions = createClass({
     this._timeout = setTimeout((function () {
       this.setState({ transitionBack: false });
     }).bind(this), this.props.transitionBackTimeout);
-  },
+  }
 
-  revealRight: function revealRight() {
+  revealRight = () => {
     this.props.onReveal("right");
     this.setState({ showRightButtons: true, showLeftButtons: false});
-  },
+  }
 
-  revealLeft: function revealLeft() {
+  revealLeft = () => {
     this.props.onReveal("left");
     this.setState({ showRightButtons: false, showLeftButtons: true});
-  },
+  }
 
-  rightClick: function rightClick(option) {
+  rightClick = (option) => {
     this.props.onRightClick(option);
     if (this.props.transitionBackOnRightClick) this.transitionBack();
-  },
+  }
 
-  leftClick: function leftClick(option) {
+  leftClick = (option) => {
     this.props.onLeftClick(option);
     if (this.props.transitionBackOnLeftClick) this.transitionBack();
-  },
+  }
 
-  close: function close() {
+  close = () => {
     this.transitionBack();
-  },
+  }
 
-  transitionBack: function transitionBack() {
+  transitionBack = () => {
     this.setState({
       showLeftButtons: false,
       showRightButtons: false,
@@ -404,9 +367,9 @@ var SwipeToRevealOptions = createClass({
     this._timeout = setTimeout((function () {
       this.setState({ transitionBack: false });
     }).bind(this), this.props.transitionBackTimeout);
-  },
+  }
 
-  getContainerStyle: function getContainerStyle() {
+  getContainerStyle = () => {
     var itemWidth;
     if (this.state.delta === 0 && this.state.showRightButtons) {
       itemWidth = this.getItemWidth("right");
@@ -416,14 +379,14 @@ var SwipeToRevealOptions = createClass({
       return translateStyle(this.props.leftOptions.length * itemWidth, "px");
     }
     return translateStyle(this.state.delta, "px");
-  },
+  }
 
-  getItemWidth: function getItemWidth(side) {
+  getItemWidth = (side) => {
     var nbOptions = side === "left" ? this.props.leftOptions.length : this.props.rightOptions.length;
     return Math.min(this.props.parentWidth / (nbOptions + 1), this.props.maxItemWidth);
-  },
+  }
 
-  getStyle: function getStyle(side, index) {
+  getStyle = (side, index) => {
     var left = side === 'left';
     var factor = left ? -1 : 1;
     var nbOptions = left ? this.props.leftOptions.length : this.props.rightOptions.length;
@@ -449,9 +412,9 @@ var SwipeToRevealOptions = createClass({
       style.transition = transition;
     }
     return style;
-  },
+  }
 
-  getSpanStyle: function getSpanStyle(side, index) {
+  getSpanStyle = (side, index) => {
     var left = side === 'left';
     var width = this.getItemWidth(side);
     var factor = left ? 1 : -1;
@@ -473,12 +436,46 @@ var SwipeToRevealOptions = createClass({
     style = translateStyle(padding, 'px', '-50%');
     style.width = width;
     return style;
-  },
+  }
 
-  handleContentClick: function handleContentClick() {
+  handleContentClick = () => {
     this.props.closeOthers();
     this.transitionBack();
   }
-});
+};
+
+SwipeToRevealOptions.propTypes = {
+  rightOptions: PropTypes.array,
+  leftOptions: PropTypes.array,
+  className: PropTypes.string,
+  actionThreshold: PropTypes.number,
+  visibilityThreshold: PropTypes.number,
+  transitionBackTimeout: PropTypes.number,
+  callActionWhenSwipingFarLeft: PropTypes.bool,
+  callActionWhenSwipingFarRight: PropTypes.bool,
+  transitionBackOnRightClick: PropTypes.bool,
+  transitionBackOnLeftClick: PropTypes.bool,
+  closeOthers: PropTypes.func,
+  onRightClick: PropTypes.func,
+  onLeftClick: PropTypes.func,
+  onReveal: PropTypes.func,
+  maxItemWidth: PropTypes.number,
+  parentWidth: PropTypes.number
+}
+
+SwipeToRevealOptions.defaultProps = {
+  rightOptions: [],
+  leftOptions: [],
+  className: "",
+  actionThreshold: 300,
+  visibilityThreshold: 50,
+  transitionBackTimeout: 400,
+  onRightClick: function onRightClick() {},
+  onLeftClick: function onLeftClick() {},
+  onReveal: function onReveal() {},
+  closeOthers: function closeOthers() {},
+  maxItemWidth: 120,
+  parentWidth: (typeof window !== 'undefined' && window.outerWidth) || (typeof screen !== 'undefined' && screen.width) || 320
+}
 
 export default SwipeToRevealOptions;

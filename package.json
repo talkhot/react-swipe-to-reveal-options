@@ -12,7 +12,10 @@
     "prepare": "npm run precommit && npm run babel && npm run dist",
     "release": "npm run prepare && npm publish && npm run docs"
   },
-  "peerDependecies": {},
+  "peerDependecies": {
+    "react": "^15.0",
+    "prop-types": "^15.5.8"
+  },
   "devDependencies": {
     "babel": "^6.23.0",
     "babel-cli": "^6.24.0",

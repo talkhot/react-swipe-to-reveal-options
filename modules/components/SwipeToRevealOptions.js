@@ -1,5 +1,6 @@
+import React from 'react';
 import PropTypes from 'prop-types';
-import createReactClass from 'create-react-class';
+import createClass from 'create-react-class';
 
 function translateStyle(x, measure, y) {
   var _y = y || "0";
@@ -9,7 +10,7 @@ function translateStyle(x, measure, y) {
   };
 }
 
-var Swipeable = createReactClass({ displayName: "Swipeable",
+var Swipeable = createClass({ displayName: "Swipeable",
   propTypes: {
     onSwiped: PropTypes.func,
     onSwipingUp: PropTypes.func,
@@ -156,7 +157,7 @@ var Swipeable = createReactClass({ displayName: "Swipeable",
   }
 });
 
-var SwipeToRevealOptions = createReactClass({
+var SwipeToRevealOptions = createClass({
   displayName: "SwipeToRevealOptions",
 
   propTypes: {

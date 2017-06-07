@@ -13,8 +13,8 @@
     "release": "npm run prepare && npm publish && npm run docs"
   },
   "peerDependecies": {
-    "react": "^15.0",
-    "prop-types": "^15.5.8"
+    "react": "^15.0 || ^16.0",
+    "prop-types": "^15.5.10"
   },
   "devDependencies": {
     "babel": "^6.23.0",
@@ -53,8 +53,6 @@
     "rollup-plugin-uglify": "0.3.1"
   },
   "dependencies": {
-    "babel-runtime": "^6.23.0",
-    "q-io": "^1.13.4",
     "create-react-class": "^15.5.3"
   }
 }

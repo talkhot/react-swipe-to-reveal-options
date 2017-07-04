@@ -121,7 +121,12 @@ class Swipeable extends Component {
       }
     }
 
-    this.setState(this.getInitialState());
+    this.setState({
+      x: null,
+      y: null,
+      swiping: false,
+      start: 0
+    });
   }
 
   render() {
